@@ -10,14 +10,17 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import products from "../data/products";
+import { useSelector } from "react-redux";
 
 const ProductDetailsScreen = () => {
-  const product = products[0];
   const { width } = useWindowDimensions();
+
+  const product = useSelector((state) => state.products.selectedProduct);
 
   const addToCartHandler = () => {
     console.warn("Add to cart");
   };
+
   return (
     <View>
       {/* Image Carousel */}
