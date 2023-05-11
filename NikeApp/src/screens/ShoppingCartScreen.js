@@ -1,31 +1,51 @@
 import { View, StyleSheet, Text, FlatList, Pressable } from "react-native";
 import CartListItem from "../components/CartListItem";
-import cart from "../data/cart";
+import { useSelector } from "react-redux";
+import {
+  selectDeliveryPrice,
+  selectNumberOfItems,
+  selectSubtotal,
+  selectTotal,
+} from "../store/slices/cartSlice";
+import { useEffect } from "react";
 
-const ShoppingCartTotals = () => (
-  <View style={styles.totalsContainer}>
-    <View style={styles.row}>
-      <Text style={styles.text}>Subtotal</Text>
-      <Text style={styles.text}>410,00 US$</Text>
-    </View>
-    <View style={styles.row}>
-      <Text style={styles.text}>Delivery</Text>
-      <Text style={styles.text}>10,00 US$</Text>
-    </View>
-    <View style={styles.row}>
-      <Text style={styles.textBold}>Total</Text>
-      <Text style={styles.textBold}>420,00 US$</Text>
-    </View>
-  </View>
-);
+const ShoppingCartTotals = () => {
+  const subtotal = useSelector(selectSubtotal);
+  const deliveryFee = useSelector(selectDeliveryPrice);
+  const total = useSelector(selectTotal);
 
-const ShoppingCartScreen = () => {
+  return (
+    <View style={styles.totalsContainer}>
+      <View style={styles.row}>
+        <Text style={styles.text}>Subtotal</Text>
+        <Text style={styles.text}>{subtotal} US$</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.text}>Delivery</Text>
+        <Text style={styles.text}>{deliveryFee} US$</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.textBold}>Total</Text>
+        <Text style={styles.textBold}>{total} US$</Text>
+      </View>
+    </View>
+  );
+};
+
+const ShoppingCartScreen = ({ navigation }) => {
+  const cartItems = useSelector((state) => state.cart.items);
+  const numberOfItems = useSelector(selectNumberOfItems);
+
   const checkoutHandler = () => {};
+
+  useEffect(() => {
+    if (numberOfItems === 0) navigation.navigate("Products");
+  }, [numberOfItems]);
 
   return (
     <>
       <FlatList
-        data={cart}
+        data={cartItems}
         renderItem={({ item }) => <CartListItem cartItem={item} />}
         ListFooterComponent={() => <ShoppingCartTotals />}
       />

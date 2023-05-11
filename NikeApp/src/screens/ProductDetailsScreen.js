@@ -9,16 +9,17 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import products from "../data/products";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { cartSlice } from "../store/slices/cartSlice";
 
 const ProductDetailsScreen = () => {
   const { width } = useWindowDimensions();
 
+  const dispatch = useDispatch();
   const product = useSelector((state) => state.products.selectedProduct);
 
   const addToCartHandler = () => {
-    console.warn("Add to cart");
+    dispatch(cartSlice.actions.addCartItem({ product }));
   };
 
   return (
